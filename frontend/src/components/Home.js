@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import video from "../videos/invideo-ai-1080 EcoTrack_ Your Personal Guide to a Green 2024-08-11.mp4";
+import video from "../videos/video.mp4";
 import { useNavigate } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
