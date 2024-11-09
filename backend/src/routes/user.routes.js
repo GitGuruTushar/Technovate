@@ -21,5 +21,7 @@ router.post("/change-password", verifyJWT, changePassword)
 router.patch("/change-avatar", verifyJWT, upload.single("avatar"), updateUserAvatar)
 router.patch("/update-details", verifyJWT, updateAccountDetails)
 router.get("/getAllUsers", fetchAllUsers)
+router.post("/register", upload.fields([{ name: "avatar", maxCount: 1 }]), registerUser);
+
 
 export default router

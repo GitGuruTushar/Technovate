@@ -1,20 +1,21 @@
-import connectDB from "./db/index.js";
-import dotenv from 'dotenv'
-import app from './app.js'
+import connectDB from './db/index.js';
+import dotenv from 'dotenv';
+import app from './app.js';
 
 dotenv.config({
-    path : "./.env" 
-})
+    path: './.env'
+});
 
+// Connect to the database, then start the server
 connectDB()
-.then(()=>{
-    app.on("error", (err)=>{
-        console.error("error occured database connection failed", err);
+    .then(() => {
+        app.on('error', (err) => {
+            console.error('Error occurred: Database connection failed', err);
+        });
+        app.listen(process.env.PORT || 5000, () => {
+            console.log(`Listening on port: ${process.env.PORT || 5000}`);
+        });
     })
-    app.listen(process.env.PORT, ()=>{
-        console.log(`listining on port : ${process.env.PORT}`);
-    })
-})
-.catch((err)=>{
-    console.error("connection to database failed ", err) 
-})
+    .catch((err) => {
+        console.error('Connection to database failed', err);
+    });
