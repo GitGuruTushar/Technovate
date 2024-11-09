@@ -9,50 +9,47 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("Individual");
-  const [avatar, setAvatar] = useState(null);
-  const [avatarPreview, setAvatarPreview] = useState(null); // State to store image preview
   const [showModal, setShowModal] = useState(false);
   const [message, setMessage] = useState("");
-  const [code, setCode] = useState("");
-  const [verified, setVerified] = useState(false);
   const route = useNavigate();
 
   const handleSignUp = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("fullName", fullName);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("role", role);
-    formData.append("avatar", avatar);
+    // Prepare data to be sent in the request
+    const userData = {
+      fullName,
+      email,
+      password,
+      role,
+    };
     try {
-      await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v4/users/register`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      // Send data as JSON in a POST request
+      const response = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/api/v4/users/register`,
+        userData,
+        {
+          headers: {
+            "Content-Type": "application/json", // Specify JSON content type
+          },
+        }
+      );
 
-      setMessage("Sign-up successful");
-      setShowModal(true);
+      if (response.status === 201) {
+        setMessage("Sign-up successful!");
+      } else {
+        setMessage("Sign-up failed.");
+      }
     } catch (error) {
       console.error("Error during sign-up:", error);
-      setMessage("Sign-up failed");
-      setShowModal(true);
+      setMessage("Sign-up failed. Please try again.");
     }
+    setShowModal(true);
   };
 
   const closeModal = () => {
     setShowModal(false);
-    route("/login");
-  };
-
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    setAvatar(file);
-    if (file) {
-      setAvatarPreview(URL.createObjectURL(file)); // Create object URL for preview
-    }
+    route("/login"); // Redirect to login page after closing the modal
   };
 
   return (
@@ -62,7 +59,9 @@ function SignUp() {
         <h1>Sign Up</h1>
         <form onSubmit={handleSignUp}>
           <div className="input-group">
-            <label style={{color:"#fff"}} htmlFor="fullName">Full Name</label>
+            <label style={{ color: "#fff" }} htmlFor="fullName">
+              Full Name
+            </label>
             <input
               type="text"
               id="fullName"
@@ -73,7 +72,9 @@ function SignUp() {
             />
           </div>
           <div className="input-group">
-            <label style={{color:"#fff"}} htmlFor="email">Email</label>
+            <label style={{ color: "#fff" }} htmlFor="email">
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -84,7 +85,9 @@ function SignUp() {
             />
           </div>
           <div className="input-group">
-            <label style={{color:"#fff"}} htmlFor="password">Password</label>
+            <label style={{ color: "#fff" }} htmlFor="password">
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -96,7 +99,9 @@ function SignUp() {
             />
           </div>
           <div className="input-group">
-            <label style={{color:"#fff"}} htmlFor="role">Role</label>
+            <label style={{ color: "#fff" }} htmlFor="role">
+              Role
+            </label>
             <select
               id="role"
               name="role"
@@ -108,25 +113,6 @@ function SignUp() {
               <option value="Organisation">Organisation</option>
             </select>
           </div>
-          <div className="input-group">
-            <label style={{color:"#fff"}} htmlFor="avatar">Avatar</label>
-            <input
-              type="file"
-              id="avatar"
-              name="avatar"
-              required
-              onChange={handleAvatarChange}
-            />
-          </div>
-          {avatarPreview && (
-            <div className="avatar-preview">
-              <img
-                src={avatarPreview}
-                alt="Avatar Preview"
-                style={{ width: "150px", height: "150px", borderRadius: "50%" }}
-              />
-            </div>
-          )}
           <button type="submit" className="signup-button">
             Sign Up
           </button>

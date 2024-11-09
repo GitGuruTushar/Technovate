@@ -1,101 +1,70 @@
-import React, { useState } from "react";
-import logo from "../Images/logo.jpg";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import Modal from './Modal'; // Import the Modal component
+import React, { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ setIsLoggedIn, setAvatar }) => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [showModal, setShowModal] = useState(false); // State for modal visibility
-  const route = useNavigate();
+function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    const loginData = {
-      email,
-      password,
-    };
+    if (!email || !password) {
+      setMessage('Email and password are required');
+      return;
+    }
 
-    axios.post(`${process.env.REACT_APP_BASE_URL}/api/v4/users/login`, loginData, { withCredentials: true })
-      .then((response) => {
-        // Handle success
-        setIsLoggedIn(true);
-        setAvatar(response.data.data.avatar);
-        localStorage.setItem('isLoggedIn', true);
-        localStorage.setItem('avatar', response.data.data.avatar);
-        
-        setShowModal(true); // Show modal on success
-
-      })
-      .catch((error) => {
-        console.error("There was an error logging in!", error);
-        console.log(error.response.data);
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/v4/users/login`, {
+        email,
+        password,
       });
-  };
 
-  const closeModal = () => {
-    setShowModal(false);
-    if (!localStorage.getItem('surveyCompleted')) {
-      route('/survey');
-    } else {
-      route('/');
+      if (response.status === 200) {
+        // Store the token in localStorage or use context to manage authentication state
+        localStorage.setItem('token', response.data.token);
+        setMessage('Login successful');
+        navigate('/survey'); // Redirect to dashboard or home page
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage('Invalid email or password');
     }
   };
 
   return (
-    <div className="login-container">
-      {showModal && <Modal message="Login Successful!" onClose={closeModal} />} {/* Display modal */}
-      <div className="sun"></div>
-      <div className="login-form">
-        <div className="login-header">
-          <h1 style={{fontFamily:"Poppins"}}>Green Login Form</h1>
-          <div className="logo">
-            <img src={logo} alt="Globe Logo" />
-          </div>
-        </div>
+    <div className="login-page">
+      <div className="login-container">
+        <h1>Login</h1>
         <form onSubmit={handleLogin}>
           <div className="input-group">
             <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" required onChange={(e)=>setEmail(e.target.value)} />
+            <input
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
           <div className="input-group">
             <label htmlFor="password">Password</label>
             <input
-              type={showPassword ? "text" : "password"}
+              type="password"
               id="password"
-              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
-              onChange={(e)=>setPassword(e.target.value)}
             />
           </div>
-          <div className="options">
-            <div className="show-password">
-              <input
-                type="checkbox"
-                id="show-password"
-                checked={showPassword}
-                onChange={() => setShowPassword(!showPassword)}
-              />
-              <label htmlFor="show-password">Show Password</label>
-            </div>
-            <a href="/" className="forgot-password">
-              Forgot Password?
-            </a>
-          </div>
-          <div className="remember-me">
-            <input type="checkbox" id="remember-me" />
-            <label htmlFor="remember-me">Keep Me Signed In</label>
-          </div>
-          <button type="submit" className="login-button">
-            LOGIN
-          </button>
+          <button type="submit">Login</button>
         </form>
+        {message && <p>{message}</p>}
       </div>
     </div>
   );
-};
+}
 
 export default Login;

@@ -81,7 +81,8 @@ const sendEmail = (to, subject, text)=>{
 export const registerUser = asyncHandler(async(req,res)=>{
     const {fullName, email, password, role} = req.body;
     
-
+    console.log(req.body)
+    console.log(req)
     if([fullName, email, password, role].some((field)=>field?.trim()==="")){
         res.status(400).send("All fields are required")
         throw new ApiError(400,"All fields are required")
@@ -93,20 +94,13 @@ export const registerUser = asyncHandler(async(req,res)=>{
         throw new ApiError("User already exist with this email")
     }
 
-    const avatarLocalPath = req.files?.avatar[0]?.path;
-    if(!avatarLocalPath){
-        res.status(401).send("Avatar is required");
-        throw new ApiError("Avatar is required")
-    }
 
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
 
     const newUser = await User.create({
         fullName,
         email,
         password,
         role,
-        avatar : avatar.url
     })
     if(!newUser){
         res.status(400).send("Network Error");

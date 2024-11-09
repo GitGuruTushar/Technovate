@@ -13,6 +13,7 @@
   "dependencies": {
     "@google-cloud/vision": "^4.3.1",
     "@google/generative-ai": "^0.16.0",
+    "backend": "file:",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.4.0",
     "cookie-parser": "^1.4.6",
