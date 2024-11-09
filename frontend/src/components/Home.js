@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import video from "../videos/video.mp4";
+import video from "../videos/8544194-hd_1920_1080_25fps.mp4";
+
 import { useNavigate } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
@@ -425,3 +426,4 @@ function Home() {
 }
 
 export default Home;
+
