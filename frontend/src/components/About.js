@@ -1,6 +1,6 @@
 import React from 'react';
 // import './About.css'; // Make sure you have this CSS file or style it accordingly
-import tanisha from '../Images/Passport size picture.jpg'
+import tanisha from '../Images/Screenshot 2023-11-20 210025.png'
 import tushar from '../Images/IMG20241011165420[1].jpg'
 import aizab from '../Images/WhatsApp Image 2024-11-09 at 18.05.41_85c16dd3.jpg'
 import saumya from '../Images/WhatsApp Image 2024-11-09 at 18.03.20_2deb7006.jpg'
